@@ -26,5 +26,22 @@ export default [
       hideInMenu: true
     },
     component: () => import('@/view/login/login.vue')
+  },
+  {
+    path: '/401',
+    name: 'error_401',
+    meta: {
+      hideInMenu: true
+    },
+    component: () => import('@/view/error-page/401.vue')
+  },
+  {
+    path: '/home',
+    name: 'home',
+    meta: {
+      title: '文档',
+      href: 'https://lison16.github.io/iview-admin-doc/#/',
+      icon: 'ios-book'
+    }
   }
 ]
