@@ -36,36 +36,69 @@
                 <!-- 单页面则Tooltip，包含子菜单则Dropdown -->
                 <div class="menu-collapsed" v-show="collapsed" :list="menuList">
                     <template v-for="item in menuList">
-                        <Dropdown ref="dropdown" @on-click="handleClick" :class="hideTitle ? '' : 'collased-menu-dropdown'" :transfer="hideTitle" :placement="placement">
+                        <Dropdown ref="dropdown" v-if="item.children" @on-click="handleClick" transfer placement="right-start">
                             <!-- 缩小的父级菜单 -->
                             <a class="drop-menu-a" type="text" @mouseover="handleMousemove($event, children)" :style="{textAlign: !hideTitle ? 'left' : ''}">
-                                <common-icon :size="rootIconSize" :color="textColor" :type="parentItem.icon"/>
-                                <span class="menu-title" v-if="!hideTitle">{{ showTitle(parentItem) }}</span>
+                                <component :is="iconType" :type="iconName" :color="iconColor" :size="iconSize"></component>
+                                <span class="menu-title" v-if="!hideTitle">{{ item.title }}</span>
                                 <Icon style="float: right;" v-if="!hideTitle" type="ios-arrow-forward" :size="16"/>
                             </a>
                             <!-- 子菜单列表显示 -->
                             <DropdownMenu ref="dropdown" slot="list">
-                                <template v-for="child in children">
-                                    <collapsed-menu v-if="showChildren(child)" :icon-size="iconSize" :parent-item="child" :key="`drop-${child.name}`"></collapsed-menu>
-                                    <DropdownItem v-else :key="`drop-${child.name}`" :name="child.name"><common-icon :size="iconSize" :type="child.icon"/><span class="menu-title">{{ showTitle(child) }}</span></DropdownItem>
+                                <template v-for="child in item.children">
+                                    <DropdownItem v-else :key="`drop-${child.name}`" :name="child.name">
+                                        <component :is="iconType" :size="iconSize" :type="child.icon"></component>
+                                        <span class="menu-title">{{ child.title }}</span>
+                                    </DropdownItem>
                                 </template>
                             </DropdownMenu>
                         </Dropdown>
-                        <collapsed-menu v-if="item.children && item.children.length > 1" @on-click="handleSelect" hide-title :root-icon-size="rootIconSize" :icon-size="iconSize" :theme="theme" :parent-item="item" :key="`drop-menu-${item.name}`"></collapsed-menu>
-                        <Tooltip transfer v-else :content="showTitle(item.children && item.children[0] ? item.children[0] : item)" placement="right" :key="`drop-menu-${item.name}`">
-                            <a @click="handleSelect(getNameOrHref(item, true))" class="drop-menu-a" :style="{textAlign: 'center'}"><common-icon :size="rootIconSize" :color="textColor" :type="item.icon || (item.children && item.children[0].icon)"/></a>
+                        <!-- 后台设计偏少存在主菜单无二级菜单 -->
+                        <Tooltip transfer v-else :content="item.title" placement="right" :key="`drop-menu-${item.name}`">
+                            <a @click="handleSelect(getNameOrHref(item, true))" class="drop-menu-a" :style="{textAlign: 'center'}">
+                                <component :size="rootIconSize" :color="textColor" :type="item.icon"></component>
+                            </a>
                         </Tooltip>
                     </template>
                 </div>
             </Sider>
         </div>
+        <Layout>
+            <Header class="header-con">
+                <div class="header-bar">
+                    <!-- 缩小侧边栏按钮 -->
+                    <a @click="handleChange" type="text" :class="['sider-trigger-a', collapsed ? 'collapsed' : '']"><Icon :type="icon" :size="size" /></a>
+                    <!-- 面包屑菜单可不使用 -->
+                    <div class="custom-bread-crumb">
+                        <Breadcrumb :style="{fontSize: `${fontSize}px`}">
+                            <BreadcrumbItem v-for="item in list" :to="item.to" :key="`bread-crumb-${item.name}`">
+                                <component style="margin-right: 4px;" :type="item.icon || ''"/>
+                                {{ item.title }}
+                            </BreadcrumbItem>
+                        </Breadcrumb>
+                    </div>
+                    <div class="custom-content-con">
+                        <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
+                        <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
+                        <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
+                        <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+                    </div>
+                </div>
+                <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
+                    <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
+                    <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
+                    <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
+                    <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+                </header-bar>
+            </Header>
+        </Layout>
     </Layout>
 </template>
 
 <script>
 
-    import Vue from 'vue'
-    import './MainLayout.css'
+    import "./main2.less"
+    // import './MainLayout.css'
 
     export default {
         name: "MainLayout",
@@ -78,11 +111,15 @@
                 theme: 'dark',
                 menuList: [],
                 maxLogo: '',
+                hideTitle: true
 
             }
         },
         methods: {
             handleClick() {
+
+            },
+            handleMousemove (event, children) {
 
             }
         }
