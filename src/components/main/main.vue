@@ -108,6 +108,8 @@
     import Fullscreen from './components/fullscreen'
     import TagsNav from './components/tags-nav'
     import ABackTop from './components/a-back-top'
+    import minLogo from '@/assets/images/logo-min.png'
+    import maxLogo from '@/assets/images/logo.png'
     import './main.less'
 
     export default {
@@ -122,12 +124,14 @@
         data() {
             return {
                 collapsed: false,
+                maxLogo,
+                minLogo,
                 activeName: '',
                 openedNames: [],
                 accordion: false,
                 theme: 'dark',
                 menuList: [],
-                maxLogo: '',
+
                 hideTitle: true,
                 isFullscreen: false,
                 tagNavList: []

@@ -1,7 +1,8 @@
-// import Main from '@/components/main'
+import Main from '@/components/main'
 // import parentView from '@/components/parent-view'
 
 /**
+ * 沿用此路由格式配置（删除一些不必要，后续考虑去掉面包屑）
  * iview-admin中meta除了原生参数外可配置的参数:
  * meta: {
  *  title: { String|Number|Function }
@@ -28,20 +29,31 @@ export default [
     component: () => import('@/view/login/login.vue')
   },
   {
+    path: '/home',
+    name: 'home',
+    meta: {
+      icon: 'logo-buffer',
+      title: '组件'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'tree_select_page',
+        name: 'tree_select_page',
+        meta: {
+          icon: 'md-arrow-dropdown-circle',
+          title: '树状下拉选择器'
+        },
+        component: () => import('@/view/components/tree-select/index.vue')
+      }
+    ]
+  },
+  {
     path: '/401',
     name: 'error_401',
     meta: {
       hideInMenu: true
     },
     component: () => import('@/view/error-page/401.vue')
-  },
-  {
-    path: '/home',
-    name: 'home',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
   }
 ]
