@@ -1,5 +1,5 @@
 <template>
-    <Layout class="">
+    <Layout class="main">
         <div class="side-menu-wrapper">
             <!-- 侧边菜单栏 -->
             <Sider ref="sidebar" class="" hide-trigger collapsible width="230" :collapsed-width="78" v-model.trim="">
@@ -80,48 +80,82 @@
                     <div class="custom-content-con">
                         <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
                         <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-                        <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
                         <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
                     </div>
                 </div>
-                <header-bar :collapsed="collapsed" @on-coll-change="handleCollapsedChange">
-                    <user :message-unread-count="unreadCount" :user-avatar="userAvatar"/>
-                    <language v-if="$config.useI18n" @on-lang-change="setLocal" style="margin-right: 10px;" :lang="local"/>
-                    <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader" :has-read="hasReadErrorPage" :count="errorCount"></error-store>
-                    <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
-                </header-bar>
             </Header>
+            <content class="main-content-con">
+                <Layout class="main-layout-con">
+                    <div class="tag-nav-wrapper">
+                        <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"/>
+                    </div>
+                    <Content class="content-wrapper">
+                        <keep-alive :include="cacheList">
+                            <router-view/>
+                        </keep-alive>
+                        <ABackTop :height="100" :bottom="80" :right="50" container=".content-wrapper"></ABackTop>
+                    </Content>
+                </Layout>
+            </content>
         </Layout>
     </Layout>
 </template>
 
 <script>
 
-    import "./main2.less"
-    // import './MainLayout.css'
+    import User from './components/user'
+    import Language from './components/language'
+    import Fullscreen from './components/fullscreen'
+    import TagsNav from './components/tags-nav'
+    import ABackTop from './components/a-back-top'
+    import minLogo from '@/assets/images/logo-min.png'
+    import maxLogo from '@/assets/images/logo.png'
+    import './main.less'
 
     export default {
-        name: "MainLayout",
+        name: "Main",
+        components: {
+            User,
+            Language,
+            Fullscreen,
+            TagsNav,
+            ABackTop
+        },
         data() {
             return {
                 collapsed: false,
+                maxLogo,
+                minLogo,
                 activeName: '',
                 openedNames: [],
                 accordion: false,
                 theme: 'dark',
                 menuList: [],
-                maxLogo: '',
-                hideTitle: true
 
+                hideTitle: true,
+                isFullscreen: false,
+                tagNavList: []
+
+            }
+        },
+        computed: {
+            cacheList() {
+                return null;
             }
         },
         methods: {
             handleClick() {
 
             },
-            handleMousemove (event, children) {
+            handleMousemove(event, children) {
 
+            },
+            handleChange() {
+
+            },
+            handleCloseTag() {
             }
+
         }
     }
 </script>

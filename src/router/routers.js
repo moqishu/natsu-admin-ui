@@ -28,31 +28,64 @@ export default [
     },
     component: () => import('@/view/login/login.vue')
   },
+  // {
+  //   path: '/home',
+  //   name: 'home',
+  //   meta: {
+  //     icon: 'logo-buffer',
+  //     title: '组件'
+  //   },
+  //   component: Main,
+  //   children: [
+  //     {
+  //       path: 'tree_select_page',
+  //       name: 'tree_select_page',
+  //       meta: {
+  //         icon: 'md-arrow-dropdown-circle',
+  //         title: '树状下拉选择器'
+  //       },
+  //       component: () => import('@/view/components/tree-select/index.vue')
+  //     }
+  //   ]
+  // },
   {
-    path: '/home',
-    name: 'home',
-    meta: {
-      icon: 'logo-buffer',
-      title: '组件'
-    },
+    path: '/',
+    name: '_home',
+    redirect: '/home',
     component: Main,
+    meta: {
+      hideInMenu: true,
+      notCache: true
+    },
     children: [
       {
-        path: 'tree_select_page',
-        name: 'tree_select_page',
+        path: '/home',
+        name: 'home',
         meta: {
-          icon: 'md-arrow-dropdown-circle',
-          title: '树状下拉选择器'
+          hideInMenu: true,
+          title: '首页',
+          notCache: true,
+          icon: 'md-home'
         },
-        component: () => import('@/view/components/tree-select/index.vue')
+        // component: () => import('@/view/single-page/home')
       }
     ]
+  },
+  {
+    path: '',
+    name: 'doc',
+    meta: {
+      title: '文档',
+      href: 'https://lison16.github.io/iview-admin-doc/#/',
+      icon: 'ios-book'
+    }
   },
   {
     path: '/401',
     name: 'error_401',
     meta: {
-      hideInMenu: true
+      title: '401页面',
+      hideInMenu: false
     },
     component: () => import('@/view/error-page/401.vue')
   }
